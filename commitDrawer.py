@@ -52,7 +52,7 @@ def setUpArray(message):
      for character in message:
           commitArray.extend(alphabet[character])
      
-     commitArray = addExtraBlocks(commitArray, lengthOfMessage)
+     commitArray = addExtraBlocks(commitArray, len(message))
      return commitArray
 
 def addExtraBlocks(commitArray, lengthOfMessage):
@@ -102,7 +102,7 @@ def assignCommitDates(commitArray):
         an array of date objects
      """
      dates = []
-     commitBeginIndex = 28 #There will always be four empty columns to begin the commit array
+     commitBeginIndex = findFirstCommitDay(commitArray)
 
      today = date.today()
 
@@ -113,6 +113,19 @@ def assignCommitDates(commitArray):
           today = (today + timedelta(days = 1))
 
      return dates
+
+def findFirstCommitDay(commitArray):
+     """Finds the first day for commit
+
+     Parameters:
+        commitArray, an array of 0 and 1's
+
+     Returns:
+        an integer (index) of the column where committing should start
+     """
+     for index in range(len(commitArray)):
+          if commitArray[index] == 1:
+               return index
 
 def putDatesInFile(message, datesArray):
      """Puts an array of dates into a file called commitDatesFor_<message>.txt
@@ -125,11 +138,15 @@ def putDatesInFile(message, datesArray):
      """
      filename = "commitDatesForMessage_" + message + ".txt"
      handle = open(filename, "wb")
-     for date in datesArray:
-          if date == date.today():
-               handle.write("Heads up, make sure to commit today! \n")
 
-          handle.write("[ ] -- " + "Commit on " + str(date.month) + "/" + str(date.day) + "/" + str(date.year) + "\n")
+     if datesArray[0] == date.today():
+          handle.write("<---- Heads up, make sure to commit today! ----> \n")
+     else: 
+          handle.write("<---- Don't commit today! ----> \n")
+
+     #Write the assigned days to commit to the file in checklist format
+     for assignedDate in datesArray:
+          handle.write("[ ] -- " + "Commit on " + str(assignedDate.month) + "/" + str(assignedDate.day) + "/" + str(assignedDate.year) + "\n")
 
      handle.close()
 
