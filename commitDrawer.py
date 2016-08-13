@@ -20,9 +20,14 @@ def main():
      """
      message = raw_input("Enter a message: ")
      commitArray = setUpArray(message)
+     dates = assignCommitDates(commitArray)
 
+     finalDay = dates[-1]
+     print("The message will be ready on " +  str(finalDay.month) + "/" + str(finalDay.day) + "/" + str(finalDay.year) )
      printCharacters(commitArray)
 
+     createdFilename = putDatesInFile(message, dates)
+     print("Your GitHub Profile will look like this after " + "days. " + "Please check " + createdFilename + " and commit on the assigned dates.")
 
 
 #Up to 7 characters are allowed
@@ -90,10 +95,42 @@ def assignCommitDates(commitArray):
         commitArray, an array of 0 and 1's
 
      Returns:
-        an 
+        an array of dates
      """
      dates = []
-     commitBeginIndex = 21 #There will always be three columns to begin the commit array
+     commitBeginIndex = 28 #There will always be four empty columns to begin the commit array
+
+     today = date.today()
+
+     for index in range(commitBeginIndex, len(commitArray)):
+          if commitArray[index] == 1:
+               dates.append(today)
+
+          today = (today + timedelta(days = 1))
+
+     return dates
+
+def putDatesInFile(message, datesArray):
+     """Puts an array of dates into a file called commitDatesFor<message>.txt
+
+     Parameters:
+        datesArray, an array of dates
+
+     Returns:
+        the name of the created file
+     """
+     filename = "commitDatesFor" + message + ".txt"
+     handle = open(filename, "wb")
+     for date in datesArray:
+          if date == date.today():
+               handle.write("Heads up, make sure to commit today! \n")
+
+          handle.write("[ ] -- " + "Commit on " + str(date.month) + "/" + str(date.day) + "/" + str(date.year) + "\n")
+
+     handle.close()
+
+     return filename
+
 
 # Arrays below represent character set that can be displayed on the git contributions visual
 
