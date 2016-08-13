@@ -19,6 +19,15 @@ def main():
      the right times.
      """
      message = raw_input("Enter a message: ")
+
+     #Check that the message is the correct length
+     lengthOfMessage = len(message)
+     while lengthOfMessage > 7 or lengthOfMessage <= 0:
+          print("Please enter a valid message. The GitHub visual can only support a maximum of 7 characters.")
+          message = raw_input("Enter a message: ")
+          lengthOfMessage = len(message)
+
+
      commitArray = setUpArray(message)
      dates = assignCommitDates(commitArray)
 
@@ -27,10 +36,9 @@ def main():
      printCharacters(commitArray)
 
      createdFilename = putDatesInFile(message, dates)
-     print("Your GitHub Profile will look like this after " + "days. " + "Please check " + createdFilename + " and commit on the assigned dates.")
+     elapsedDays = finalDay - date.today()
+     print("Your GitHub Profile will look like this after " + str(elapsedDays.days) +  " days. \n" + "Please check " + createdFilename + " and commit on the assigned dates.")
 
-
-#Up to 7 characters are allowed
 def setUpArray(message): 
      """Creates an array of the characters in the message
 
@@ -40,16 +48,12 @@ def setUpArray(message):
      Returns:
         an array of 0 and 1's which draw out characters
      """
-     lengthOfMessage = len(message)
-     if lengthOfMessage > 7 or lengthOfMessage <= 0:
-          print("Please enter a valid message.")
-     else:
-          commitArray = []
-          for character in message:
-               commitArray.extend(alphabet[character])
-          
-          commitArray = addExtraBlocks(commitArray, lengthOfMessage)
-          return commitArray
+     commitArray = []
+     for character in message:
+          commitArray.extend(alphabet[character])
+     
+     commitArray = addExtraBlocks(commitArray, lengthOfMessage)
+     return commitArray
 
 def addExtraBlocks(commitArray, lengthOfMessage):
      #Prepend 3 block columns to the front of the commit array, since after filling 7 characters, 3 columns remain
@@ -95,7 +99,7 @@ def assignCommitDates(commitArray):
         commitArray, an array of 0 and 1's
 
      Returns:
-        an array of dates
+        an array of date objects
      """
      dates = []
      commitBeginIndex = 28 #There will always be four empty columns to begin the commit array
@@ -111,7 +115,7 @@ def assignCommitDates(commitArray):
      return dates
 
 def putDatesInFile(message, datesArray):
-     """Puts an array of dates into a file called commitDatesFor<message>.txt
+     """Puts an array of dates into a file called commitDatesFor_<message>.txt
 
      Parameters:
         datesArray, an array of dates
@@ -119,7 +123,7 @@ def putDatesInFile(message, datesArray):
      Returns:
         the name of the created file
      """
-     filename = "commitDatesFor" + message + ".txt"
+     filename = "commitDatesForMessage_" + message + ".txt"
      handle = open(filename, "wb")
      for date in datesArray:
           if date == date.today():
