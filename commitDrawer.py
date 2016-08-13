@@ -2,7 +2,7 @@
 #
 # Draw a message through the "Contributions" visualization by scheduling when to commit
 #
-# Built 8/10/16
+# Built 8/10/16 by Pedro Sandoval
 
 import sys
 import operator
@@ -84,6 +84,11 @@ def addExtraBlocks(commitArray, lengthOfMessage):
      return commitArray
 
 def printCharacters(commitArray): 
+     """Displays the array of characters
+
+     Parameters: 
+          commitArray, an array of 0 and 1's
+     """
      print("                                -------------------------------------                                ")
 
      for row in range(BLOCKS_HEIGHT):
